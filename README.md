@@ -1,4 +1,12 @@
-# InnoMinds AI
+ Team TechMinds
+ project : InnoMindsAI
+ leader (member 1)- jain khusi sushilkumar
+ member 2 - kalpana gourh
+ member 3 - Bijayani pani
+ member 4 - divyanshi likhar
+
+
+# InnoMindsAI
 **AI-Powered Innovation Management Platform — SIH 2026, Problem Statement IS-1**
 Sponsored by Netlink Software Pvt. Ltd.
 
