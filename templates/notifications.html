@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Activity &amp; Notifications &middot; InnoMinds AI{% endblock %}
+{% block page_title %}Activity &amp; Notifications 🔔{% endblock %}
+{% block page_sub %}Real-time event stream tracking evaluations, approvals, and administrative directives on your ideas.{% endblock %}
+
+{% block content %}
+<div style="max-width: 820px; display:flex; flex-direction:column; gap:12px;">
+  {% for n in notes %}
+  <div class="card" style="padding:18px 22px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px;">
+    <div style="display:flex; align-items:flex-start; gap:14px;">
+      <div style="width:36px; height:36px; border-radius:10px; background:rgba(99, 102, 241, 0.15); border:1px solid rgba(139, 92, 246, 0.3); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0;">
+        ⚡
+      </div>
+      <div>
+        <div style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted); margin-bottom:4px;">
+          {{ n.created_at }}
+        </div>
+        <div style="color:var(--text-primary); font-size:0.94rem; line-height:1.5;">
+          {{ n.message }}
+        </div>
+      </div>
+    </div>
+
+    {% if n.link %}
+    <a href="{{ n.link }}" class="btn btn-outline btn-sm" style="flex-shrink:0;">
+      Inspect &rarr;
+    </a>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="card" style="text-align:center; padding:56px 24px;">
+    <div style="font-size:2.5rem; margin-bottom:12px;">🔕</div>
+    <div style="font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:6px;">No recent activity</div>
+    <div style="font-size:0.88rem; color:var(--text-muted);">
+      You're completely caught up. When your submissions are reviewed or scored, alerts will appear here.
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

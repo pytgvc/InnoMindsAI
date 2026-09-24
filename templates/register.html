@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account &middot; InnoMinds AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-split-wrapper">
+
+  <!-- Left Side: AI Value Props -->
+  <div class="auth-hero-pane">
+    <div class="auth-brand">
+      <div class="brand-icon">⚡</div>
+      <div>Inno<span>Minds</span> AI</div>
+    </div>
+
+    <div class="auth-hero-content">
+      <div class="auth-hero-tag">
+        <span>🚀 Join the Network</span>
+      </div>
+      <h1 class="auth-hero-title">
+        Your voice drives <span>real organizational change</span>.
+      </h1>
+      <p class="auth-hero-desc">
+        Submit process breakthroughs, cost optimizations, and technology leaps. Get instant AI critique and watch your ideas move from concept to implementation.
+      </p>
+
+      <div class="auth-features-list">
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">💡</div>
+          <div>
+            <h5>Autonomous Ideation</h5>
+            <p>Refine drafts with AI suggestions before executive review.</p>
+          </div>
+        </div>
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">📈</div>
+          <div>
+            <h5>Transparent Tracking</h5>
+            <p>Real-time notification radar for every lifecycle milestone.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-hero-footer">
+      <span>SIH 2026 &middot; IS-1 &middot; Innovation Engine</span>
+    </div>
+  </div>
+
+  <!-- Right Side: Registration Card -->
+  <div class="auth-form-pane">
+    <div class="auth-card-modern">
+      <h2>Create account</h2>
+      <div class="muted">Join as an innovator to submit proposals and track ROI.</div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST">
+        <label>Full Name</label>
+        <input type="text" name="full_name" placeholder="e.g. Alex Chen" required autofocus>
+
+        <label>Department</label>
+        <select name="department" required>
+          {% for d in departments %}
+            <option value="{{ d }}">{{ d }}</option>
+          {% endfor %}
+        </select>
+
+        <label>Username</label>
+        <input type="text" name="username" placeholder="alex.chen" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Create a secure password" required>
+
+        <button class="btn btn-primary" type="submit" style="width:100%; margin-top:8px;">
+          Register as Innovator &rarr;
+        </button>
+      </form>
+
+      <div style="margin-top:20px; font-size:0.88rem; text-align:center; color:var(--text-secondary);">
+        Already registered? <a href="{{ url_for('login') }}" style="color:var(--accent-purple); font-weight:700;">Sign in here</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

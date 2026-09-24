@@ -1,0 +1,5 @@
+id,idea_id,username,role,comment,created_at
+1,1,employee,reviewer,Solid business case and high feasibility. Forwarding for executive approval.,2026-09-19 10:57
+2,1,employee,admin,Approved. Proceed with pilot implementation in Assembly Line 2.,2026-09-19 11:05
+3,2,employee,admin,"Implement a paperless employee onboarding system that digitizes forms, document submission, onboarding tasks, and company information in one centralized platform. The system should reduce manual paperwork, minimize errors, improve HR efficiency, and provide employees with a faster and more organized onboarding experience.",2026-09-19 12:13
+4,4,employee,reviewer,can be better,2026-09-24 19:08

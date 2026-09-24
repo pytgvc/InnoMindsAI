@@ -1,0 +1,9 @@
+id,username,message,link,created_at,is_read
+1,employee,Your idea 'AI-Powered Vision Inspection for Quality Control' was forwarded to admin for approval by reviewer employee.,/idea/1,2026-09-19 10:57,True
+2,employee,Your idea 'AI-Powered Vision Inspection for Quality Control' has been APPROVED!,/idea/1,2026-09-19 11:05,True
+3,employee,Your idea 'Paperless Employee onboarding' was forwarded to admin for approval by reviewer employee.,/idea/2,2026-09-19 12:12,True
+4,employee,Your idea 'Paperless Employee onboarding' has been APPROVED!,/idea/2,2026-09-19 12:13,True
+5,employee,Your idea 'smart employee suggestion system' was forwarded to admin for approval by reviewer employee.,/idea/3,2026-09-22 19:34,True
+6,employee,Your idea 'smart employee suggestion system' has been APPROVED!,/idea/3,2026-09-22 19:34,True
+7,employee,Your idea 'Smart Meeting Room Booking' was forwarded to admin for approval by reviewer employee.,/idea/4,2026-09-24 19:08,True
+8,employee,Your idea 'Smart Meeting Room Booking' has been APPROVED!,/idea/4,2026-09-24 19:09,True

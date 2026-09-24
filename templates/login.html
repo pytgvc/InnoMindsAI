@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In &middot; InnoMinds AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-split-wrapper">
+  
+  <!-- Left Side: AI Product Showcase & Vision -->
+  <div class="auth-hero-pane">
+    <div class="auth-brand">
+      <div class="brand-icon">⚡</div>
+      <div>Inno<span>Minds</span> AI</div>
+    </div>
+
+    <div class="auth-hero-content">
+      <div class="auth-hero-tag">
+        <span>🚀 Smart Innovation Platform</span>
+      </div>
+      <h1 class="auth-hero-title">
+        Turn employee ideas into <span>quantifiable ROI</span>.
+      </h1>
+      <p class="auth-hero-desc">
+        Accelerate crowdsourced innovation with automated AI evaluation, real-time semantic duplicate detection, and intelligent portfolio prioritization.
+      </p>
+
+      <div class="auth-features-list">
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">🤖</div>
+          <div>
+            <h5>Autonomous AI Scoring</h5>
+            <p>Instant category suggestion, viability breakdown, and automated summaries.</p>
+          </div>
+        </div>
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">🔍</div>
+          <div>
+            <h5>Semantic Duplicate Radar</h5>
+            <p>Prevents redundant pitches by cross-referencing all past submissions.</p>
+          </div>
+        </div>
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">📊</div>
+          <div>
+            <h5>Multi-Dimensional Matrix</h5>
+            <p>Feasibility, business value, strategic fit, novelty, and impact scoring.</p>
+          </div>
+        </div>
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">🛡️</div>
+          <div>
+            <h5>Role-Governed Flow</h5>
+            <p>Seamless handoff from Employee &rarr; Reviewer &rarr; Executive Admin.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-hero-footer">
+      <span>Smart India Hackathon 2026 &middot; Problem Statement IS-1 &middot; Production Build</span>
+    </div>
+  </div>
+
+  <!-- Right Side: Login Card -->
+  <div class="auth-form-pane">
+    <div class="auth-card-modern">
+      <h2>Welcome back</h2>
+      <div class="muted">Enter your credentials or choose a 1-click demo role below.</div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST">
+        <label for="login-username">Username</label>
+        <input id="login-username" type="text" name="username" placeholder="e.g. employee" value="{{ request.form.get('username', '') }}" required autofocus>
+
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" name="password" placeholder="••••••••" required>
+
+        <label for="login-role">Access Role</label>
+        <select id="login-role" name="role" required>
+          <option value="" disabled {% if not request.form.get('role') %}selected{% endif %}>Select account role</option>
+          <option value="employee" {% if request.form.get('role') == 'employee' %}selected{% endif %}>🧑‍💼 Employee (Innovator)</option>
+          <option value="reviewer" {% if request.form.get('role') == 'reviewer' %}selected{% endif %}>🔍 Reviewer (Evaluator)</option>
+          <option value="admin" {% if request.form.get('role') == 'admin' %}selected{% endif %}>🛡️ Platform Admin (Decision Maker)</option>
+        </select>
+
+        <button class="btn btn-primary" type="submit" style="width:100%; margin-top:4px;">
+          Authenticate &amp; Enter &rarr;
+        </button>
+      </form>
+
+      <div style="margin-top:12px; font-size:0.83rem; text-align:center; color:var(--text-secondary);">
+        New innovator? <a href="{{ url_for('register') }}" style="color:var(--accent-purple); font-weight:700;">Create employee account</a>
+      </div>
+
+      <!-- Quick 1-Click Demo Fill -->
+      <div class="demo-accounts-pills">
+        <div class="demo-pills-label">
+          <span>⚡ 1-Click Demo Profiles</span>
+          <span style="font-size:0.65rem; color:var(--accent-cyan);">Instant Fill</span>
+        </div>
+        <div class="demo-chips-grid">
+          <button type="button" class="demo-chip-btn" data-username="employee" data-password="employee123" data-role="employee">
+            Employee
+            <small>Submit Ideas</small>
+          </button>
+          <button type="button" class="demo-chip-btn" data-username="reviewer" data-password="reviewer123" data-role="reviewer">
+            Reviewer
+            <small>Score Ideas</small>
+          </button>
+          <button type="button" class="demo-chip-btn" data-username="admin" data-password="admin123" data-role="admin">
+            Admin
+            <small>Approve &amp; Exec</small>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}{{ title }} &middot; InnoMinds AI{% endblock %}
+{% block page_title %}{{ title }} 🎯{% endblock %}
+{% block page_sub %}
+  {% if request.path == '/review-queue' %}
+    Screen and score submitted employee pitches. Evaluate strategic fit and forward promising initiatives to executive approval.
+  {% else %}
+    Review prioritized proposals for final administrative approval, capital allocation, or implementation dispatch.
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Table Filter & Search Controls -->
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+  <div style="position:relative; width:100%; max-width:400px;">
+    <div style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:0.95rem; color:var(--text-muted); pointer-events:none;">🔍</div>
+    <input id="table-search" type="text" placeholder="Search ideas, departments, categories..." style="padding-left:42px; margin-bottom:0; width:100%;">
+    <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted); background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px; border:1px solid var(--border-subtle); pointer-events:none;">/</div>
+  </div>
+
+  <div style="font-size:0.82rem; color:var(--text-muted); font-family:var(--font-mono);">
+    Total in Queue: <strong style="color:var(--accent-cyan);">{{ ideas|length }}</strong>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table id="filterable-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Proposal Title</th>
+        <th>Department</th>
+        <th>AI Classification</th>
+        <th>Estimated Cost</th>
+        <th>Status</th>
+        <th style="text-align:right;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for idea in ideas %}
+      <tr>
+        <td>
+          <span style="font-family:var(--font-mono); font-weight:700; color:var(--accent-purple);">#{{ idea.id }}</span>
+        </td>
+        <td style="font-weight:600; color:#fff;">
+          {{ idea.title }}
+          {% if idea.duplicate_of %}
+            <span title="AI Duplicate Radar: Similar to #{{ idea.duplicate_of }}" style="margin-left:6px; font-size:0.9rem; cursor:help;">⚠️</span>
+          {% endif %}
+        </td>
+        <td><span style="color:var(--text-secondary);">{{ idea.department }}</span></td>
+        <td>
+          <span style="background:rgba(255,255,255,0.04); border:1px solid var(--border-subtle); padding:3px 8px; border-radius:var(--radius-sm); font-size:0.8rem; color:var(--text-secondary);">
+            {{ idea.ai_category }}
+          </span>
+        </td>
+        <td>
+          <span style="font-family:var(--font-mono); color:var(--text-primary); font-weight:600;">
+            ₹{{ "%.0f"|format(idea.cost|float) }}
+          </span>
+        </td>
+        <td>{{ m.status_pill(idea.status) }}</td>
+        <td style="text-align:right;">
+          <a href="{{ url_for('idea_detail', idea_id=idea.id) }}" class="btn btn-teal btn-sm">
+            Evaluate &rarr;
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align:center; padding:48px 24px;">
+          <div style="font-size:2rem; margin-bottom:8px;">🎉</div>
+          <div style="font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:4px;">{{ empty_msg }}</div>
+          <div style="font-size:0.85rem; color:var(--text-muted);">
+            All proposals in this stage have been screened and processed.
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

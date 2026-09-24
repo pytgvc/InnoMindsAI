@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Dashboard &middot; InnoMinds AI{% endblock %}
+{% block page_title %}
+  Welcome back, {{ current_user.full_name.split(' ')[0] }} 👋
+{% endblock %}
+{% block page_sub %}
+  {% if role == 'employee' %}
+    Real-time tracking of your innovation pipeline, submissions, and AI evaluation feedback.
+  {% elif role == 'reviewer' %}
+    Evaluation command center &mdash; review proposals, calibrate scoring metrics, and dispatch to admin.
+  {% else %}
+    Executive portfolio oversight, AI-ranked priority initiatives, and organizational velocity.
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if role == 'employee' %}
+<!-- Employee Stat Cards -->
+<div class="grid grid-4">
+  <div class="card stat-card">
+    <div class="stat-card-header">
+      <span class="label">Total Pitches</span>
+      <div class="stat-card-icon">💡</div>
+    </div>
+    <div class="value">{{ stats.total }}</div>
+  </div>
+
+  <div class="card stat-card accent-cyan">
+    <div class="stat-card-header">
+      <span class="label">In Progress</span>
+      <div class="stat-card-icon">⏳</div>
+    </div>
+    <div class="value">{{ stats.pending }}</div>
+  </div>
+
+  <div class="card stat-card accent-teal">
+    <div class="stat-card-header">
+      <span class="label">Approved / Live</span>
+      <div class="stat-card-icon">🚀</div>
+    </div>
+    <div class="value">{{ stats.approved }}</div>
+  </div>
+
+  <div class="card stat-card accent-red">
+    <div class="stat-card-header">
+      <span class="label">Refined / Rejected</span>
+      <div class="stat-card-icon">🛑</div>
+    </div>
+    <div class="value">{{ stats.rejected }}</div>
+  </div>
+</div>
+
+<div class="section-title">
+  <span>Recent Submissions</span>
+  <a href="{{ url_for('submit_idea') }}" class="btn btn-primary btn-sm">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    Submit New Idea
+  </a>
+</div>
+
+{% elif role == 'reviewer' %}
+<!-- Reviewer Stat Cards -->
+<div class="grid grid-4">
+  <div class="card stat-card">
+    <div class="stat-card-header">
+      <span class="label">Total Pipeline</span>
+      <div class="stat-card-icon">🌐</div>
+    </div>
+    <div class="value">{{ stats.total }}</div>
+  </div>
+
+  <div class="card stat-card accent-red">
+    <div class="stat-card-header">
+      <span class="label">Awaiting Scoring</span>
+      <div class="stat-card-icon">🎯</div>
+    </div>
+    <div class="value">{{ stats.queue }}</div>
+  </div>
+
+  <div class="card stat-card accent-cyan">
+    <div class="stat-card-header">
+      <span class="label">Dispatched to Admin</span>
+      <div class="stat-card-icon">📨</div>
+    </div>
+    <div class="value">{{ stats.forwarded }}</div>
+  </div>
+
+  <div class="card stat-card accent-teal">
+    <div class="stat-card-header">
+      <span class="label">Evaluated by You</span>
+      <div class="stat-card-icon">✨</div>
+    </div>
+    <div class="value">{{ stats.reviewed_by_me }}</div>
+  </div>
+</div>
+
+<div class="section-title">
+  <span>Ideas Needing Evaluation</span>
+  <a href="{{ url_for('review_queue') }}" class="btn btn-outline btn-sm">
+    Open Review Queue &rarr;
+  </a>
+</div>
+
+{% else %}
+<!-- Admin Stat Cards -->
+<div class="grid grid-4">
+  <div class="card stat-card">
+    <div class="stat-card-header">
+      <span class="label">Total Submissions</span>
+      <div class="stat-card-icon">📂</div>
+    </div>
+    <div class="value">{{ stats.total }}</div>
+  </div>
+
+  <div class="card stat-card accent-red">
+    <div class="stat-card-header">
+      <span class="label">Awaiting Approval</span>
+      <div class="stat-card-icon">⚡</div>
+    </div>
+    <div class="value">{{ stats.pending_approval }}</div>
+  </div>
+
+  <div class="card stat-card accent-teal">
+    <div class="stat-card-header">
+      <span class="label">Approved</span>
+      <div class="stat-card-icon">✅</div>
+    </div>
+    <div class="value">{{ stats.approved }}</div>
+  </div>
+
+  <div class="card stat-card accent-purple">
+    <div class="stat-card-header">
+      <span class="label">Implemented</span>
+      <div class="stat-card-icon">🏆</div>
+    </div>
+    <div class="value">{{ stats.implemented }}</div>
+  </div>
+</div>
+
+<div class="section-title">
+  <span>High-Priority Initiatives (AI-Ranked)</span>
+  <a href="{{ url_for('analytics') }}" class="btn btn-outline btn-sm">
+    View Deep Analytics &rarr;
+  </a>
+</div>
+
+<div class="table-wrap" style="margin-bottom: 24px;">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Department</th>
+        <th>AI Final Score</th>
+        <th>Status</th>
+        <th style="text-align:right;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for idea in top_ideas %}
+      <tr>
+        <td>
+          <a href="{{ url_for('idea_detail', idea_id=idea.id) }}" style="font-family:var(--font-mono); font-weight:700; color:var(--accent-purple);">
+            #{{ idea.id }}
+          </a>
+        </td>
+        <td style="font-weight:600; color:#fff;">{{ idea.title }}</td>
+        <td><span style="color:var(--text-secondary);">{{ idea.department }}</span></td>
+        <td>
+          <span style="font-family:var(--font-mono); font-weight:800; font-size:1.05rem; color:var(--accent-cyan);">
+            {{ idea.final_score }} <small style="font-size:0.7rem; color:var(--text-muted);">/100</small>
+          </span>
+        </td>
+        <td>{{ m.status_pill(idea.status) }}</td>
+        <td style="text-align:right;">
+          <a href="{{ url_for('idea_detail', idea_id=idea.id) }}" class="btn btn-outline btn-sm">Review &rarr;</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align:center; padding:32px; color:var(--text-muted);">
+          No evaluated initiatives ranked yet.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="section-title">
+  <span>Recent Activity Feed</span>
+</div>
+{% endif %}
+
+<!-- Common Recent Activity Table -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Department</th>
+        <th>AI Classification</th>
+        <th>Status</th>
+        <th style="text-align:right;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for idea in ideas %}
+      <tr>
+        <td>
+          <span style="font-family:var(--font-mono); font-weight:600; color:var(--text-muted);">#{{ idea.id }}</span>
+        </td>
+        <td style="font-weight:600; color:#fff;">{{ idea.title }}</td>
+        <td><span style="color:var(--text-secondary);">{{ idea.department }}</span></td>
+        <td>
+          <span style="background:rgba(255,255,255,0.04); border:1px solid var(--border-subtle); padding:3px 8px; border-radius:var(--radius-sm); font-size:0.8rem; color:var(--text-secondary);">
+            {{ idea.ai_category or idea.category }}
+          </span>
+        </td>
+        <td>{{ m.status_pill(idea.status) }}</td>
+        <td style="text-align:right;">
+          <a href="{{ url_for('idea_detail', idea_id=idea.id) }}" class="btn btn-outline btn-sm">
+            View Details
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align:center; padding:48px 24px;">
+          <div style="font-size:2rem; margin-bottom:8px;">💡</div>
+          <div style="font-size:1rem; font-weight:700; color:#fff; margin-bottom:4px;">No ideas in the pipeline yet</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">
+            Submit your first idea to trigger AI analysis, duplicate detection, and automated scoring.
+          </div>
+          {% if role == 'employee' %}
+          <a href="{{ url_for('submit_idea') }}" class="btn btn-primary btn-sm">
+            Submit Your First Idea
+          </a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

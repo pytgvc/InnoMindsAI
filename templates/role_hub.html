@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Role Hub &middot; InnoMinds AI{% endblock %}
+{% block page_title %}Role Command Center 🔀{% endblock %}
+{% block page_sub %}Active single-session workspace. Seamlessly pivot your operational perspective without needing to sign out.{% endblock %}
+
+{% block content %}
+<div class="grid grid-3">
+  
+  <!-- Employee Card -->
+  <div class="card role-hub-card card-employee">
+    <div class="role-hub-icon-wrap">🧑‍💼</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+      <h3 style="margin:0;">Employee</h3>
+      <span class="status-pill status-Approved">Innovator</span>
+    </div>
+    <p>Submit pitches, get instant AI analysis, cross-check duplicates, and track your ideas across approval stages.</p>
+    
+    <ul>
+      <li>Autonomous AI categorization &amp; pitch summary</li>
+      <li>Real-time pipeline milestone tracker</li>
+      <li>Collaborative feedback on rejected or amended ideas</li>
+    </ul>
+
+    <div style="margin-top:auto; padding-top:16px;">
+      <a href="{{ url_for('switch_role', role='employee') }}" class="btn btn-teal" style="width:100%;">
+        Enter as Employee &rarr;
+      </a>
+    </div>
+  </div>
+
+  <!-- Reviewer Card -->
+  <div class="card role-hub-card card-reviewer">
+    <div class="role-hub-icon-wrap">🔍</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+      <h3 style="margin:0;">Reviewer</h3>
+      <span class="status-pill status-Under-Review">Evaluator</span>
+    </div>
+    <p>Perform deep technical &amp; commercial evaluations. Calibrate feasibility, novelty, and strategic alignment.</p>
+    
+    <ul>
+      <li>5-axis weighted evaluation rubric</li>
+      <li>Duplicate detection review &amp; merging</li>
+      <li>Instant forward-to-admin or reject with notes</li>
+    </ul>
+
+    <div style="margin-top:auto; padding-top:16px;">
+      <a href="{{ url_for('switch_role', role='reviewer') }}" class="btn btn-amber" style="width:100%;">
+        Enter as Reviewer &rarr;
+      </a>
+    </div>
+  </div>
+
+  <!-- Admin Card -->
+  <div class="card role-hub-card card-admin">
+    <div class="role-hub-icon-wrap">🛡️</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+      <h3 style="margin:0;">Platform Admin</h3>
+      <span class="status-pill status-Pending-Approval">Executive</span>
+    </div>
+    <p>Executive governance, capital budget allocation, final approval gating, and organizational innovation analytics.</p>
+    
+    <ul>
+      <li>AI portfolio prioritization &amp; ranking</li>
+      <li>Capital allocation &amp; ROI projection tracking</li>
+      <li>Cross-departmental pipeline analytics</li>
+    </ul>
+
+    <div style="margin-top:auto; padding-top:16px;">
+      <a href="{{ url_for('switch_role', role='admin') }}" class="btn btn-primary" style="width:100%;">
+        Enter as Admin &rarr;
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<div class="card" style="margin-top:20px; background:linear-gradient(90deg, rgba(99, 102, 241, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%); border-color:rgba(139, 92, 246, 0.3);">
+  <div style="display:flex; align-items:center; gap:14px;">
+    <div style="font-size:1.6rem;">💡</div>
+    <div>
+      <strong style="color:#fff;">Continuous Session Architecture</strong>
+      <div style="color:var(--text-secondary); font-size:0.88rem; margin-top:2px;">
+        You can transition between roles at any second using <strong>Role Hub</strong> or the quick-switch pills in the sidebar footer. Session state and notifications remain unified.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

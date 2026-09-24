@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}InnoMinds AI{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+
+  {% if current_user %}
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-title">
+        <div class="brand-icon">⚡</div>
+        <div>Inno<span>Minds</span> AI</div>
+      </div>
+      <small>
+        <span>SIH 2026</span> &bull; <span>IS-1</span>
+        <span class="brand-badge">PROD</span>
+      </small>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Navigation</div>
+      <a class="nav-link {% if request.path=='/dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">
+        <span class="nav-link-icon">📊</span> Dashboard
+      </a>
+      <a class="nav-link {% if request.path=='/role-hub' %}active{% endif %}" href="{{ url_for('role_hub') }}">
+        <span class="nav-link-icon">🔀</span> Role Hub
+      </a>
+
+      {% if current_user.role == 'employee' %}
+      <div class="nav-label">Innovation Hub</div>
+      <a class="nav-link {% if request.path=='/submit' %}active{% endif %}" href="{{ url_for('submit_idea') }}">
+        <span class="nav-link-icon">💡</span> Submit Idea
+      </a>
+      <a class="nav-link {% if request.path=='/my-ideas' %}active{% endif %}" href="{{ url_for('my_ideas') }}">
+        <span class="nav-link-icon">📁</span> My Submissions
+      </a>
+      {% endif %}
+
+      {% if current_user.role in ['reviewer','admin'] %}
+      <div class="nav-label">Evaluation Engine</div>
+      <a class="nav-link {% if request.path=='/review-queue' %}active{% endif %}" href="{{ url_for('review_queue') }}">
+        <span class="nav-link-icon">🎯</span> Review Queue
+      </a>
+      <a class="nav-link {% if request.path=='/analytics' %}active{% endif %}" href="{{ url_for('analytics') }}">
+        <span class="nav-link-icon">📈</span> AI Analytics
+      </a>
+      {% endif %}
+
+      {% if current_user.role == 'admin' %}
+      <div class="nav-label">Governance</div>
+      <a class="nav-link {% if request.path=='/approval-queue' %}active{% endif %}" href="{{ url_for('approval_queue') }}">
+        <span class="nav-link-icon">🛡️</span> Approval Queue
+      </a>
+      {% endif %}
+
+      <div class="nav-label">Workspace</div>
+      <a class="nav-link {% if request.path=='/notifications' %}active{% endif %}" href="{{ url_for('notifications') }}">
+        <span class="nav-link-icon">🔔</span> Activity
+        {% if unread_count > 0 %}
+          <span style="background:var(--accent-rose); color:#fff; border-radius:999px; padding:1px 8px; font-size:0.68rem; font-weight:700; margin-left:auto; box-shadow:0 0 8px var(--accent-rose);">{{ unread_count }}</span>
+        {% endif %}
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="session-badge-card">
+        <div class="session-badge-header">
+          <span class="session-live-pill">
+            <span class="live-dot"></span> Live Session
+          </span>
+          <span style="font-size:0.68rem; color:var(--text-muted); font-family:var(--font-mono);">SYNCED</span>
+        </div>
+        <div class="session-viewing-text">
+          Active Role: <strong>{{ current_user.role.capitalize() }}</strong>
+        </div>
+        <div class="role-switcher-chips">
+          <a href="{{ url_for('switch_role', role='employee') }}"
+             class="chip-role {% if current_user.role=='employee' %}active{% endif %}">
+            Employee
+          </a>
+          <a href="{{ url_for('switch_role', role='reviewer') }}"
+             class="chip-role {% if current_user.role=='reviewer' %}active{% endif %}">
+            Reviewer
+          </a>
+          <a href="{{ url_for('switch_role', role='admin') }}"
+             class="chip-role {% if current_user.role=='admin' %}active{% endif %}">
+            Admin
+          </a>
+        </div>
+      </div>
+
+      <div class="user-profile-strip">
+        <div class="user-avatar-wrap">
+          <div class="user-avatar">
+            {{ current_user.full_name[0] if current_user.full_name else 'U' }}
+          </div>
+          <div class="user-info-text">
+            <div class="user-info-name">{{ current_user.full_name }}</div>
+            <div class="user-info-role">{{ current_user.role }}{% if real_role and real_role != current_user.role %} (Acc: {{ real_role }}){% endif %}</div>
+          </div>
+        </div>
+        <a class="logout-link" href="{{ url_for('logout') }}" title="Log out">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </a>
+      </div>
+    </div>
+  </aside>
+  {% endif %}
+
+  <main class="main">
+    {% if current_user %}
+    <div class="topbar">
+      <div class="topbar-header">
+        <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+        <div class="sub">{% block page_sub %}{% endblock %}</div>
+      </div>
+      <div class="topbar-actions">
+        <a href="{{ url_for('notifications') }}" class="icon-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+          Activity
+          <span id="notif-badge" class="badge" style="display:{{ 'flex' if unread_count > 0 else 'none' }}">{{ unread_count }}</span>
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">
+            <span style="font-size:1.1rem;">
+              {% if category == 'success' %}✨
+              {% elif category == 'danger' %}⚠️
+              {% elif category == 'warning' %}⚡
+              {% else %}ℹ️{% endif %}
+            </span>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

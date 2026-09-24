@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Idea #{{ idea.id }} &middot; InnoMinds AI{% endblock %}
+{% block page_title %}
+  <span style="font-family:var(--font-mono); color:var(--accent-purple);">#{{ idea.id }}</span> &ndash; {{ idea.title }}
+{% endblock %}
+{% block page_sub %}
+  Submitted by <strong style="color:#fff;">{{ idea.submitted_by }}</strong> &middot; {{ idea.submitted_at }} &middot; <span style="color:var(--accent-cyan);">{{ idea.department }}</span>
+{% endblock %}
+
+{% block content %}
+
+<!-- Status & Alerts Bar -->
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+  <div>
+    {{ m.status_pill(idea.status) }}
+  </div>
+  <div style="font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted);">
+    CATEGORY: <strong style="color:var(--text-primary);">{{ idea.category }}</strong>
+  </div>
+</div>
+
+{% if idea.duplicate_of %}
+<div class="dup-warning">
+  <span style="font-size:1.3rem;">⚠️</span>
+  <div>
+    <strong>AI Duplicate Radar:</strong> This idea bears strong similarity to
+    <a href="{{ url_for('idea_detail', idea_id=idea.duplicate_of) }}" style="font-weight:700; color:#fff; text-decoration:underline;">
+      Idea #{{ idea.duplicate_of }}
+    </a>
+    (Similarity Confidence: <strong style="color:#fff;">{{ "%.0f"|format((idea.duplicate_score|float) * 100) }}%</strong>). Please review for consolidation before scoring.
+  </div>
+</div>
+{% endif %}
+
+<!-- Main Content Grid: Original Pitch vs AI Breakdown -->
+<div class="grid grid-2" style="align-items:start;">
+  
+  <!-- Left: Original Submission -->
+  <div class="card" style="display:flex; flex-direction:column; gap:16px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
+      <h3 style="margin:0; font-size:1.15rem; color:#fff; display:flex; align-items:center; gap:8px;">
+        <span>📝</span> Innovator's Pitch
+      </h3>
+      <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">RAW DATA</span>
+    </div>
+
+    <div>
+      <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.06em;">Problem &amp; Solution Description</div>
+      <p style="color:var(--text-primary); font-size:0.96rem; line-height:1.65; white-space:pre-line; margin:0;">
+        {{ idea.description }}
+      </p>
+    </div>
+
+    <div class="grid grid-2" style="margin:8px 0 0; gap:12px;">
+      <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:14px;">
+        <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Estimated Cost</div>
+        <div style="font-family:var(--font-mono); font-size:1.4rem; font-weight:800; color:#fff; margin-top:4px;">
+          ₹{{ "%.0f"|format(idea.cost|float) }}
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:14px;">
+        <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Expected Impact</div>
+        <div style="font-size:0.95rem; font-weight:600; color:var(--accent-cyan); margin-top:6px;">
+          {{ idea.expected_impact or 'Not specified' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Autonomous AI Intelligence Layer -->
+  <div>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+      <div style="width:28px; height:28px; border-radius:8px; background:var(--gradient-ai); display:flex; align-items:center; justify-content:center; font-size:0.9rem;">⚡</div>
+      <h3 style="margin:0; font-size:1.15rem; color:#fff;">Autonomous AI Diagnostics</h3>
+    </div>
+
+    <div class="ai-block">
+      <h4><span>🏷️</span> AI Suggested Category</h4>
+      <p><strong style="color:#fff;">{{ idea.ai_category }}</strong></p>
+    </div>
+
+    <div class="ai-block">
+      <h4><span>📋</span> Executive Summary</h4>
+      <p>{{ idea.ai_summary }}</p>
+    </div>
+
+    <div class="ai-block">
+      <h4><span>🎯</span> Identified Core Problem</h4>
+      <p>{{ idea.ai_problem }}</p>
+    </div>
+
+    <div class="ai-block">
+      <h4><span>✨</span> Recommended Enhancements</h4>
+      <p>{{ idea.ai_improvements }}</p>
+    </div>
+
+    <div class="ai-block">
+      <h4><span>⚙️</span> Technical &amp; Operational Prerequisites</h4>
+      <p>{{ idea.ai_requirements }}</p>
+    </div>
+
+    <div class="ai-block">
+      <h4><span>🚀</span> Implementation Roadmap Suggestion</h4>
+      <p>{{ idea.ai_implementation }}</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Evaluation Results (If Scored) -->
+{% if idea.final_score %}
+<div class="section-title">Evaluation &amp; Multi-Criteria Scoring</div>
+<div class="grid grid-2" style="align-items:start;">
+  
+  <div class="card">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.06em;">Scoring Matrix</div>
+      <div style="font-size:0.75rem; color:var(--accent-purple); font-family:var(--font-mono);">WEIGHTED ALGORITHM</div>
+    </div>
+
+    <div class="score-grid">
+      <div class="score-item">
+        <div class="n">{{ idea.business_value }}</div>
+        <div class="l">Business Value</div>
+      </div>
+      <div class="score-item">
+        <div class="n">{{ idea.feasibility }}</div>
+        <div class="l">Feasibility</div>
+      </div>
+      <div class="score-item">
+        <div class="n">{{ idea.cost_score }}</div>
+        <div class="l">Cost Score</div>
+      </div>
+      <div class="score-item">
+        <div class="n">{{ idea.strategic_alignment }}</div>
+        <div class="l">Strategic Fit</div>
+      </div>
+      <div class="score-item">
+        <div class="n">{{ idea.novelty }}</div>
+        <div class="l">Novelty</div>
+      </div>
+      <div class="score-item">
+        <div class="n">{{ idea.potential_impact }}</div>
+        <div class="l">Impact Potential</div>
+      </div>
+    </div>
+
+    <div style="text-align:center; padding:18px; background:linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%); border-radius:var(--radius-lg); border:1px solid rgba(139, 92, 246, 0.25);">
+      <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Composite Prioritization Score</div>
+      <div style="font-family:var(--font-mono); font-size:2.8rem; font-weight:800; color:#fff; letter-spacing:-0.03em;">
+        {{ idea.final_score }} <span style="font-size:1.2rem; color:var(--text-muted); font-weight:400;">/ 100</span>
+      </div>
+      <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:6px;">
+        Evaluated by <strong style="color:#fff;">{{ idea.reviewer }}</strong> &middot; {{ idea.reviewed_at }}
+      </div>
+    </div>
+  </div>
+
+  {% if chart_path %}
+  <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+    <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); width:100%; margin-bottom:12px;">Radar / Dimension Visual</div>
+    <img class="chart-img" src="{{ url_for('static', filename=chart_path) }}" alt="Evaluation chart">
+  </div>
+  {% endif %}
+
+</div>
+{% endif %}
+
+<!-- Reviewer Evaluation Form -->
+{% if current_user.role in ['reviewer','admin'] and idea.status in ['Submitted','Under Review'] %}
+<div class="section-title">Evaluate &amp; Calibrate Proposal</div>
+<div class="card" style="max-width:800px; padding:32px;">
+  <form method="POST" action="{{ url_for('evaluate', idea_id=idea.id) }}">
+    
+    <div class="form-row">
+      <div>
+        <label>Business Value: <output id="out-bv">5</output>/10</label>
+        <input class="score-slider" data-output="out-bv" type="range" min="0" max="10" step="0.5" name="business_value" value="5">
+      </div>
+      <div>
+        <label>Feasibility: <output id="out-fs">5</output>/10</label>
+        <input class="score-slider" data-output="out-fs" type="range" min="0" max="10" step="0.5" name="feasibility" value="5">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label>Strategic Alignment: <output id="out-sa">5</output>/10</label>
+        <input class="score-slider" data-output="out-sa" type="range" min="0" max="10" step="0.5" name="strategic_alignment" value="5">
+      </div>
+      <div>
+        <label>Novelty: <output id="out-nv">5</output>/10</label>
+        <input class="score-slider" data-output="out-nv" type="range" min="0" max="10" step="0.5" name="novelty" value="5">
+      </div>
+    </div>
+
+    <div>
+      <label>Potential Impact: <output id="out-pi">5</output>/10</label>
+      <input class="score-slider" data-output="out-pi" type="range" min="0" max="10" step="0.5" name="potential_impact" value="5">
+    </div>
+
+    <div>
+      <label>Reviewer Commentary &amp; Recommendations</label>
+      <textarea name="comment" placeholder="Provide actionable rationale for your scoring, suggestions for refinement, or operational risks..."></textarea>
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:8px;">
+      <button type="submit" name="decision" value="forward" class="btn btn-primary" style="flex:1;">
+        Score &amp; Forward to Admin &rarr;
+      </button>
+      <button type="submit" name="decision" value="reject" class="btn btn-red" data-confirm-target>
+        Score &amp; Reject
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+<!-- Admin Approval Decision Panel -->
+{% if current_user.role == 'admin' and idea.status == 'Pending Approval' %}
+<div class="section-title">Executive Governance &amp; Decision</div>
+<div class="card" style="max-width:800px; padding:32px;">
+  <form method="POST" action="{{ url_for('decide', idea_id=idea.id) }}">
+    <div>
+      <label>Executive Directive / Decision Notes</label>
+      <textarea name="admin_comment" placeholder="State final approval conditions, budget allocation instructions, or reason for decline..."></textarea>
+    </div>
+    
+    <div>
+      <label>Projected Annual ROI (%) <span style="color:var(--text-muted); font-size:0.75rem;">(Optional - for portfolio analytics)</span></label>
+      <input type="number" name="roi_estimate" min="0" step="1" placeholder="e.g. 35">
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:8px;">
+      <button type="submit" name="action" value="approve" class="btn btn-teal" style="flex:1;">
+        ✅ Approve Proposal
+      </button>
+      <button type="submit" name="action" value="reject" class="btn btn-red" data-confirm="Permanently decline this proposal?">
+        ❌ Decline Proposal
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+<!-- Admin Mark as Implemented -->
+{% if current_user.role == 'admin' and idea.status == 'Approved' %}
+<div class="card" style="max-width:800px; background:linear-gradient(90deg, rgba(245, 158, 11, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%); border-color:rgba(16, 185, 129, 0.3);">
+  <form method="POST" action="{{ url_for('decide', idea_id=idea.id) }}" data-confirm="Mark this approved initiative as fully IMPLEMENTED in the organization?">
+    <input type="hidden" name="admin_comment" value="">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+      <div>
+        <h4 style="margin:0 0 4px; color:#fff;">Initiative In Execution</h4>
+        <div style="font-size:0.85rem; color:var(--text-secondary);">This proposal has executive approval. When deployment is complete, promote to Implemented status.</div>
+      </div>
+      <button type="submit" name="action" value="implement" class="btn btn-amber">
+        🚀 Mark as Implemented
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+<!-- Discussion & Activity Thread -->
+<div class="section-title">Lifecycle Discussion &amp; Logs</div>
+{% for c in comments %}
+<div class="comment">
+  <div class="meta">
+    <strong style="color:#fff;">{{ c.username }}</strong>
+    <span class="status-pill status-{{ 'Approved' if c.role=='admin' else ('Under-Review' if c.role=='reviewer' else 'Submitted') }}" style="padding:2px 8px; font-size:0.65rem;">{{ c.role }}</span>
+    &middot; <span>{{ c.created_at }}</span>
+  </div>
+  <div style="color:var(--text-secondary); font-size:0.92rem; line-height:1.5;">
+    {{ c.comment }}
+  </div>
+</div>
+{% else %}
+<div class="card" style="text-align:center; padding:32px; color:var(--text-muted);">
+  No discussion comments posted yet.
+</div>
+{% endfor %}
+
+{% endblock %}

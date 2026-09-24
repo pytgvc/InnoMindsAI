@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}My Submissions &middot; InnoMinds AI{% endblock %}
+{% block page_title %}My Innovation Submissions 📋{% endblock %}
+{% block page_sub %}Full audit trail of every idea you've pitched, along with AI categorization and current review standing.{% endblock %}
+
+{% block content %}
+
+<!-- Controls -->
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+  <div style="position:relative; width:100%; max-width:400px;">
+    <div style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:0.95rem; color:var(--text-muted); pointer-events:none;">🔍</div>
+    <input id="table-search" type="text" placeholder="Search your submissions..." style="padding-left:42px; margin-bottom:0; width:100%;">
+    <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted); background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px; border:1px solid var(--border-subtle); pointer-events:none;">/</div>
+  </div>
+
+  <a href="{{ url_for('submit_idea') }}" class="btn btn-primary btn-sm">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    Submit New Idea
+  </a>
+</div>
+
+<div class="table-wrap">
+  <table id="filterable-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Proposal Title</th>
+        <th>Department</th>
+        <th>AI Classification</th>
+        <th>Submitted Date</th>
+        <th>Current Status</th>
+        <th style="text-align:right;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for idea in ideas %}
+      <tr>
+        <td>
+          <span style="font-family:var(--font-mono); font-weight:700; color:var(--accent-purple);">#{{ idea.id }}</span>
+        </td>
+        <td style="font-weight:600; color:#fff;">{{ idea.title }}</td>
+        <td><span style="color:var(--text-secondary);">{{ idea.department }}</span></td>
+        <td>
+          <span style="background:rgba(255,255,255,0.04); border:1px solid var(--border-subtle); padding:3px 8px; border-radius:var(--radius-sm); font-size:0.8rem; color:var(--text-secondary);">
+            {{ idea.ai_category }}
+          </span>
+        </td>
+        <td><span style="color:var(--text-muted); font-size:0.85rem;">{{ idea.submitted_at }}</span></td>
+        <td>{{ m.status_pill(idea.status) }}</td>
+        <td style="text-align:right;">
+          <a href="{{ url_for('idea_detail', idea_id=idea.id) }}" class="btn btn-outline btn-sm">
+            View Lifecycle
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align:center; padding:48px 24px;">
+          <div style="font-size:2rem; margin-bottom:8px;">💡</div>
+          <div style="font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:4px;">No ideas submitted yet</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">
+            Have a proposal to reduce costs, automate manual work, or enhance products?
+          </div>
+          <a href="{{ url_for('submit_idea') }}" class="btn btn-primary btn-sm">
+            Submit Your First Pitch &rarr;
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
